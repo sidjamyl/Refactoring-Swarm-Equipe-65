@@ -3,9 +3,7 @@ import sys
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
-import src.utils.agents.agentTest as agentTest
-from src.utils.tools.pylintTool import run_pylint_on_file
+from src.utils.graph.graphDefinition import builder
 
 load_dotenv()
 
@@ -20,47 +18,69 @@ def main():
 
     print(f"🚀 DEMARRAGE SUR : {args.target_dir}")
     
+    # Récupérer tous les fichiers .py
     python_files = list(Path(args.target_dir).rglob("*.py"))
     if not python_files:
         print(f"❌ Aucun fichier .py trouvé dans {args.target_dir}")
         sys.exit(1)
     else:
-        print(f"🔍 Fichiers .py trouvés : {[str(f) for f in python_files]}")
-
-    for file_to_analyze in python_files:
-        print(f"🔎 Fichier analysé par l'Auditor : {file_to_analyze}")
-       
-        messages = [
-            SystemMessage(content=(
-                "You are a code quality analyzer. You MUST use the run_pylint_on_file tool to analyze Python files.\n"
-                "After calling the tool, respond ONLY with:\n"
-                "1. The file name\n"
-                "2. The exact pylint score from the tool output\n"
-                "Example format:\n"
-                "file.py - Score: 8.5/10"
-            )),
-            HumanMessage(content=f"Use the run_pylint_on_file tool to analyze: {file_to_analyze}")
-        ]
+        print(f"🔍 Fichiers .py trouvés : {len(python_files)} fichiers")
+        for f in python_files:
+            print(f"   - {f}")
+    
+    # Compiler le graph
+    graph = builder.compile()
+    
+    # Traiter chaque fichier individuellement
+    for idx, python_file in enumerate(python_files, 1):
+        print(f"\n{'='*60}")
+        print(f"📝 Traitement du fichier {idx}/{len(python_files)}: {python_file}")
+        print(f"{'='*60}\n")
         
-        agent = agentTest.model.bind_tools([run_pylint_on_file])
-        ai_msg = agent.invoke(messages)
-        messages.append(ai_msg)
-
-        # Execute tools and append ToolMessage objects
-        for tool_call in ai_msg.tool_calls:
-            tool_result = run_pylint_on_file.invoke(tool_call['args'])
-            tool_msg = ToolMessage(  # [!code ++]
-                content=str(tool_result),
-                tool_call_id=tool_call['id']  # [!code ++]
-            )
-            messages.append(tool_msg)
-
-        # Final model call with tool results
-        final_response = agent.invoke(messages)
+        # Créer un state initial pour ce fichier
+        initial_state = {
+            "target_dir": args.target_dir,
+            "sandbox_dir": os.path.join(args.target_dir, "..", "sandbox"),
+            "current_file": python_file,
+            "iteration_count": 0,
+            "max_iterations": 5,
+            "pylint_reports": (0, ""),
+            "refactor_plan": None,
+            "raw_test_output": "",
+            "test_exit_code": 0,
+            "test_analysis": "",
+            "tests_passed": False,
+            "status": "INIT"
+        }
         
-        print(f"📝 Rapport de l'agent: {final_response.content}")
-
-    print("✅ MISSION_COMPLETE")
+        try:
+            # Exécuter le workflow pour ce fichier
+            result = graph.invoke(initial_state)
+            
+            # Afficher les résultats
+            print(f"\n✅ Analyse terminée pour {python_file}")
+            print(f"   Status: {result.get('status', 'UNKNOWN')}")
+            
+            # Afficher le rapport Pylint
+            if result.get("pylint_reports"):
+                code, output = result["pylint_reports"]
+                print(f"   Pylint exit code: {code}")
+            
+            # Afficher le plan de refactoring (rapport de l'auditeur)
+            if result.get("refactor_plan"):
+                print(f"\n📋 Rapport de l'Auditeur:")
+                for plan in result["refactor_plan"]:
+                    print(plan)
+            
+        except Exception as e:
+            print(f"❌ Erreur lors du traitement de {python_file}: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            continue
+    
+    print(f"\n{'='*60}")
+    print("✅ MISSION_COMPLETE - Tous les fichiers ont été traités")
+    print(f"{'='*60}")
 
 if __name__ == "__main__":
     main()

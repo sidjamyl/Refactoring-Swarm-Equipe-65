@@ -2,18 +2,19 @@ import subprocess
 from pathlib import Path
 from typing import Tuple
 from langchain_core.tools import tool 
+from src.utils.state.stateDefinition import SwarmState
 
-@tool
-def run_pylint_on_file(file_path: str) -> Tuple[int, str]:
+
+def run_pylint_on_file(state: SwarmState) -> dict:
     """
     Lance pylint sur un fichier et renvoie (code_retour, texte_rapport).
     - code_retour : code de sortie de pylint (0 si tout va bien, >0 sinon).
     - texte_rapport : sortie complète de pylint (stdout + stderr).
     """
-    path = Path(file_path)
+    path = Path(state["current_file"])
 
     if not path.is_file():
-        return 1, f"File not found: {file_path}"
+       return {"pylint_reports": (1, f"File not found: {state['current_file']}")}
 
     try:
         result = subprocess.run(
@@ -22,7 +23,12 @@ def run_pylint_on_file(file_path: str) -> Tuple[int, str]:
             text=True
         )
         output = result.stdout + "\n" + result.stderr
-        return result.returncode, output
+
+        return {
+            "pylint_reports": (result.returncode, output)
+        }
+
+        
     except FileNotFoundError:
         # pylint n'est pas trouvé dans l'environnement
-        return 1, "Error: pylint command not found. Is it installed in your venv?"
+        return {"pylint_reports": (1, "Error: pylint not found")}
