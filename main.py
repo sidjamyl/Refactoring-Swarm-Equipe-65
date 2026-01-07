@@ -57,20 +57,13 @@ def main():
             # Exécuter le workflow pour ce fichier
             result = graph.invoke(initial_state)
             
-            # Afficher les résultats
-            print(f"\n✅ Analyse terminée pour {python_file}")
-            print(f"   Status: {result.get('status', 'UNKNOWN')}")
-            
-            # Afficher le rapport Pylint
-            if result.get("pylint_reports"):
-                code, output = result["pylint_reports"]
-                print(f"   Pylint exit code: {code}")
-            
-            # Afficher le plan de refactoring (rapport de l'auditeur)
-            if result.get("refactor_plan"):
-                print(f"\n📋 Rapport de l'Auditeur:")
-                for plan in result["refactor_plan"]:
-                    print(plan)
+            # Afficher le résumé final
+            print(f"\n{'='*60}")
+            print(f"✅ TRAITEMENT TERMINÉ pour {python_file}")
+            print(f"   Status final: {result.get('status', 'UNKNOWN')}")
+            if result.get("refactored_code"):
+                print(f"   Code refactorisé: {len(result['refactored_code'])} caractères")
+            print(f"{'='*60}")
             
         except Exception as e:
             print(f"❌ Erreur lors du traitement de {python_file}: {str(e)}")
