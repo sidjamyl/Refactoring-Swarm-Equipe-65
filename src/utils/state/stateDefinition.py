@@ -18,6 +18,13 @@ class SwarmState(TypedDict):
     # Données de navigation
     pylint_reports: Tuple[int, str]  # Rapport pylint pour le fichier analysé
     refactor_plan: Optional[str]
+
+
+    original_code: Optional[str]      # ← Ajoutez
+    refactored_code: Optional[str]    # ← Ajoutez
+    refactor_applied: bool    
+    refactor_finished: bool        
+    
     
     # --- Nouveaux champs pour la séparation Test/Juge ---
     raw_test_output: str       # Logs bruts de pytest (Sortie du Tool)
