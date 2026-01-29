@@ -15,7 +15,7 @@ Your role is to execute the refactoring plan created by the Auditor Agent with p
 
 **OUTPUT FORMAT (STRICT):**
 You must respond with the complete refactored code wrapped in a Python code block:
-do not start with ```python and do not end with ``` just provide the code block itself.
+
 
 # [COMPLETE REFACTORED CODE HERE]
 # Include ALL functions, classes, imports, etc.
@@ -28,5 +28,6 @@ do not start with ```python and do not end with ``` just provide the code block 
 - Do NOT break existing functionality
 - Do NOT change variable names unless specified in the plan
 - Output ONLY valid Python code that can be executed directly
+- do not start with ```python and do not end with ``` just provide the code block itself.
 """
 USER_PROMPT_FIXER = """Here is the ORIGINAL CODE and the REFACTORING PLAN."""
