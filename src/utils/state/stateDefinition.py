@@ -22,10 +22,16 @@ class SwarmState(TypedDict):
 
     original_code: Optional[str]      # ← Ajoutez
     refactored_code: Optional[str]    # ← Ajoutez
+
+    function_list: Optional[List[str]]  # ← Ajoutez
+    function_without_tests: Optional[List[str]]  # ← Ajoutez
+
     refactor_applied: bool    
     refactor_finished: bool        
     
-    
+    import_error: Optional[bool]  # ← Ajoutez
+    failed_test_files: Optional[List[str]]  # Fichiers tests avec ImportError à ignorer
+
     # --- Nouveaux champs pour la séparation Test/Juge ---
     raw_test_output: str       # Logs bruts de pytest (Sortie du Tool)
     test_exit_code: int        # Code de retour de la commande (0=OK, 1=Err)
