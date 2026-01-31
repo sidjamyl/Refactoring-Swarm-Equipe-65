@@ -29,9 +29,16 @@ def auditor_agent_node(state: SwarmState) -> dict:
         ])
         audit_content = response.content
         status = "SUCCESS"
+        print(f"✅ [Auditor] Plan de refactoring généré avec succès")
+        print(f"\n{'='*60}")
+        print("📋 PLAN DE REFACTORING:")
+        print(f"{'='*60}")
+        print(audit_content)
+        print(f"{'='*60}\n")
     except Exception as e:
         audit_content = f"Error generating audit: {str(e)}"
         status = "FAILURE"
+        print(f"❌ [Auditor] Erreur lors de la génération : {str(e)}")
 
     # 4. Logging de l'expérience
     
