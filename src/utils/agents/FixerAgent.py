@@ -1,4 +1,5 @@
 
+
 import src.utils.state.stateDefinition as SwarmState
 from src.utils.agents import agentTest
 from src.utils.prompts.promptFixer import SYSTEM_PROMPT_FIXER,USER_PROMPT_FIXER
@@ -41,7 +42,17 @@ def fixer_agent_node(state : SwarmState.SwarmState) -> dict:
         status = "FAILURE"
         print(f"❌ [Fixer] Erreur lors de la génération : {str(e)}")
 
-
+    # Logging de l'expérience
+    log_experiment(
+        agent_name="Fixer",
+        model_used=agentTest.model.model,
+        action=ActionType.FIX,
+        details={
+            "input_prompt": SYSTEM_PROMPT_FIXER + "\n" + user_prompt,
+            "output_response": refactored_code
+        },
+        status=status
+    )
 
 
 
