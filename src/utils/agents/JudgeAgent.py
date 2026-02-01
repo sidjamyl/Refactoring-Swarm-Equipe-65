@@ -84,7 +84,16 @@ def judge_agent_node(state: SwarmState) -> dict:
         print(f"❌ [Judge] Erreur lors de l'analyse : {str(e)}")
     
     # Logging de l'expérience
-  
+    log_experiment(
+        agent_name="Judge",
+        model_used=agentTest.model.model,
+        action=ActionType.DEBUG,
+        details={
+            "input_prompt": SYSTEM_PROMPT_JUDGE + "\n" + user_prompt,
+            "output_response": analysis
+        },
+        status=status
+    )
     
     return {
         "tests_passed": tests_passed,
