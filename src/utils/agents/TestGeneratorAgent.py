@@ -105,7 +105,16 @@ def test_generator_agent_node(state: SwarmState) -> dict:
             write_status = "FAILURE"
         
         # Logging de l'expérience
-      
+        log_experiment(
+            agent_name="TestGenerator",
+            model_used=agentTest.model.model,
+            action=ActionType.GENERATION,
+            details={
+                "input_prompt": SYSTEM_PROMPT_TEST_GENERATOR + "\n" + user_prompt,
+                "output_response": generated_tests
+            },
+            status=write_status
+        )
         
         return {
             "status": "TESTS_GENERATED",
