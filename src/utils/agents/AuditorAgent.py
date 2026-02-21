@@ -14,7 +14,12 @@ def auditor_agent_node(state: SwarmState) -> dict:
     current_file = state["current_file"]
     raw_pylint_output = state["pylint_reports"][1]
     
-    print(f"🕵️ [Auditor] Analyse du rapport Pylint pour : {current_file}")
+    print(f"\n{'─'*80}")
+    print(f"🕵️ ÉTAPE 2/6 : AUDIT & PLANIFICATION")
+    print(f"{'─'*80}")
+    print(f"\n📝 Analyse du rapport Pylint...")
+    print(f"🤖 Agent Auditeur en cours d'exécution...")
+    
     system_prompt = AUDITOR_SYSTEM_PROMPT
 
     user_prompt = f"Target File: {current_file}\n\nRAW PYLINT OUTPUT:\n{raw_pylint_output}"
@@ -29,12 +34,18 @@ def auditor_agent_node(state: SwarmState) -> dict:
         ])
         audit_content = response.content
         status = "SUCCESS"
-        print(f"✅ [Auditor] Plan de refactoring généré avec succès")
-        print(f"\n{'='*60}")
-        print("📋 PLAN DE REFACTORING:")
-        print(f"{'='*60}")
-        print(audit_content)
-        print(f"{'='*60}\n")
+        print(f"\n✅ Plan de refactoring généré")
+        print(f"\n{'╔'+'═'*78+'╗'}")
+        print(f"║{' '*26}📋 PLAN DE REFACTORING{' '*26}║")
+        print(f"{'╠'+'═'*78+'╣'}")
+        # Afficher ligne par ligne avec bordures
+        for line in audit_content.split('\n')[:10]:  # Limiter à 10 premières lignes
+            print(f"║ {line[:76]:<76} ║")
+        if len(audit_content.split('\n')) > 10:
+            print(f"║ {'... (plan complet sauvegardé)':<76} ║")
+        print(f"{'╚'+'═'*78+'╝'}")
+        
+        input("\n[Appuyez sur Entrée pour continuer vers la lecture du code...]")
     except Exception as e:
         audit_content = f"Error generating audit: {str(e)}"
         status = "FAILURE"

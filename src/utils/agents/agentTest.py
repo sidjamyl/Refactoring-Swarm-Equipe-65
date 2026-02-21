@@ -16,4 +16,3 @@ model = ChatMistralAI(
     model="mistral-large-latest",
     temperature=0.1,
 )
-
