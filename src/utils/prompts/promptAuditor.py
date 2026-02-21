@@ -23,4 +23,3 @@ Primary Focus: [Documentation | Bug Fixes | Cleanup]
 ...
 
 (List all necessary actions to reach a score of 10/10)"""
-
