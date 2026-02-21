@@ -6,27 +6,22 @@ from src.utils.state.stateDefinition import SwarmState
 
 def setup_node(state: SwarmState) -> SwarmState:
     """Prépare l'environnement sandbox."""
-    target = state["target_dir"]
-    sandbox = state["sandbox_dir"]
     current_file = Path(state["current_file"])
+    sandbox = state["sandbox_dir"]
     
-    # Nettoyage et copie
-    if os.path.exists(sandbox):
-        shutil.rmtree(sandbox)
-    shutil.copytree(target, sandbox)
+    print(f"\n{'╔'+'═'*78+'╗'}")
+    print(f"║{' '*30}🚀 INITIALISATION{' '*30}║")
+    print(f"{'╚'+'═'*78+'╝'}")
+    print(f"\n📂 Répertoire de travail  : {sandbox}")
+    print(f"📄 Fichier à analyser     : {current_file.name}")
+    print(f"🔧 État initial           : Configuration terminée")
     
-    # Calculer le chemin du fichier dans le sandbox
-    relative_path = current_file.relative_to(target)
-    sandbox_file = Path(sandbox) / relative_path
+    input("\n[Appuyez sur Entrée pour démarrer l'analyse...]")
     
-    print(f"📁 [Setup] Code copié de {target} vers {sandbox}")
-    print(f"📁 [Setup] Fichier cible dans sandbox : {sandbox_file}")
-    
-    # On initialise le compteur et on met à jour current_file vers le sandbox
+    # On initialise le compteur sans copier de fichiers
     return {
-        "current_file": sandbox_file,
+        "current_file": current_file,
         "iteration_count": 0, 
         "tests_passed": False, 
         "status": "RUNNING"
     }
-
