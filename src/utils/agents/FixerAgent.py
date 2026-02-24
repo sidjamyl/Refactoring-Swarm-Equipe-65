@@ -15,7 +15,7 @@ def fixer_agent_node(state: SwarmState) -> dict:
     # Récupérer l'itération actuelle
     iteration = state["iteration_count"]
     test_analysis = state["test_analysis"]
-    refactored_code = state["refactored_code"]
+    refactored_code = state.get("refactored_code", "")
 
     function_without_tests = state.get("functions_without_tests", [])
     function_list = state.get("function_list", [])

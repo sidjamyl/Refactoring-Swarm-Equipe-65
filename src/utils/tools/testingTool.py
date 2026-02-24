@@ -1,7 +1,6 @@
 import subprocess
 from pathlib import Path
 from src.utils.state.stateDefinition import SwarmState
-from src.utils.lib.checkImportError import check_import_errors
 
 def run_pytest_tool(state: SwarmState) -> dict:
     """ lance pytest -k avec le nom des fonctions a tester de function_list dans current_file
@@ -52,7 +51,7 @@ def run_pytest_tool(state: SwarmState) -> dict:
         full_output = result.stdout + "\n" + result.stderr
         
         # Vérifier les erreurs d'import
-        has_import_error = check_import_errors(full_output)
+        has_import_error = "ImportError" in full_output or "ModuleNotFoundError" in full_output
         
         print(f"\n{'─'*80}")
         print(f"🧪 ÉTAPE 5/6 : EXÉCUTION DES TESTS")
