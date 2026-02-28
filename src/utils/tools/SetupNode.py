@@ -16,7 +16,7 @@ def setup_node(state: SwarmState) -> SwarmState:
     print(f"📄 Fichier à analyser     : {current_file.name}")
     print(f"🔧 État initial           : Configuration terminée")
     
-    input("\n[Appuyez sur Entrée pour démarrer l'analyse...]")
+    # input("\n[Appuyez sur Entrée pour démarrer l'analyse...]")
     
     # On initialise le compteur sans copier de fichiers
     return {

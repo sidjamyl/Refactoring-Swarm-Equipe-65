@@ -46,6 +46,12 @@ FONCTIONS À TESTER : {functions_without_tests}
 CODE SOURCE COMPLET :
 {code}
 
+RÈGLES D'IMPORT STRICTES :
+- Tu peux UNIQUEMENT importer depuis `{module_name}` (le fichier cible, sans extension)
+- N'importe QUE les symboles (classes, fonctions) qui apparaissent EXPLICITEMENT dans le code source ci-dessus
+- N'invente JAMAIS de symboles qui ne sont pas dans le code source (pas de `subtract`, `factorial`, `UserManager`, etc. sauf s'ils sont définis dans le code)
+- Si tu as besoin de pytest, importe `import pytest` en premier
+
 Instructions spécifiques :
 1. Analyse chaque fonction dans la liste "FONCTIONS À TESTER"
 2. Comprends son rôle, ses paramètres et ce qu'elle retourne
@@ -73,4 +79,39 @@ def test_calculate_discount_invalid_percentage():
 ```
 
 Retourne UNIQUEMENT le code Python du fichier de tests, propre et prêt à être exécuté.
+"""
+
+USER_PROMPT_TEST_GENERATOR_APPEND = """
+Des tests existent déjà pour ce fichier. Tu dois UNIQUEMENT générer les tests manquants pour les fonctions listées ci-dessous.
+
+FICHIER CIBLE : {file_name}
+
+FONCTIONS MANQUANTES (sans tests) : {functions_without_tests}
+
+CODE SOURCE COMPLET :
+{code}
+
+FICHIER DE TESTS EXISTANT (NE PAS REPRODUIRE) :
+{existing_tests}
+
+RÈGLES STRICTES :
+1. Écris EN PREMIER les lignes d'import manquantes (uniquement celles qui ne sont pas dans le fichier existant)
+2. N'importe QUE les symboles qui apparaissent EXPLICITEMENT dans le code source fourni
+3. Ne duplique PAS les imports déjà présents dans le fichier existant
+4. Après les imports, génère UNIQUEMENT les nouvelles classes ou fonctions de test pour les fonctions manquantes
+5. Ne reproduis PAS les fixtures ou classes de test qui existent déjà
+6. Chaque test doit être dans une classe `Test<NomFonction>` avec des méthodes
+7. Aucune balise markdown, retour uniquement du code Python pur
+
+Format de sortie attendu :
+```
+# imports manquants seulement (peut être vide si tout est déjà importé)
+from {module_name} import NouvellesFonctions
+
+# nouvelles classes de test
+class TestNouvellesFonctions:
+    ...
+```
+
+Retourne UNIQUEMENT le code Python (imports + nouveaux tests), sans balises markdown.
 """

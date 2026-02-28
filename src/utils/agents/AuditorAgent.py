@@ -45,7 +45,7 @@ def auditor_agent_node(state: SwarmState) -> dict:
             print(f"║ {'... (plan complet sauvegardé)':<76} ║")
         print(f"{'╚'+'═'*78+'╝'}")
         
-        input("\n[Appuyez sur Entrée pour continuer vers la lecture du code...]")
+        # input("\n[Appuyez sur Entrée pour continuer vers la lecture du code...]")
     except Exception as e:
         audit_content = f"Error generating audit: {str(e)}"
         status = "FAILURE"

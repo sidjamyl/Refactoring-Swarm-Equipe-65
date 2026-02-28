@@ -12,7 +12,9 @@ def list_functions_in_code(state: SwarmState) -> dict:
         for node in ast.walk(tree):
             # Capture les fonctions et les méthodes (async inclus)
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                function_list.append(node.name)
+                # Exclure les dunder methods (__init__, __str__, etc.)
+                if not (node.name.startswith("__") and node.name.endswith("__")):
+                    function_list.append(node.name)
     except SyntaxError:
         # Si le code est trop "messy" et ne compile pas, on retourne une liste vide
         # ou on laisse l'Auditeur gérer l'erreur de syntaxe avant.

@@ -18,13 +18,20 @@ def main():
 
     print(f"🚀 DEMARRAGE SUR : {args.target_dir}")
     
-    # Récupérer tous les fichiers .py
-    python_files = list(Path(args.target_dir).rglob("*.py"))
+    # Récupérer uniquement les fichiers source .py (exclure tests/, __init__.py, test_*)
+    all_py_files = list(Path(args.target_dir).rglob("*.py"))
+    python_files = [
+        f for f in all_py_files
+        if f.name != "__init__.py"
+        and not f.name.startswith("test_")
+        and "tests" not in f.relative_to(args.target_dir).parts
+        and f.name != "conftest.py"
+    ]
     if not python_files:
-        print(f"❌ Aucun fichier .py trouvé dans {args.target_dir}")
+        print(f"❌ Aucun fichier source .py trouvé dans {args.target_dir}")
         sys.exit(1)
     else:
-        print(f"🔍 Fichiers .py trouvés : {len(python_files)} fichiers")
+        print(f"🔍 Fichiers source .py trouvés : {len(python_files)} fichiers (sur {len(all_py_files)} total)")
         for f in python_files:
             print(f"   - {f}")
     
@@ -43,7 +50,7 @@ def main():
             "sandbox_dir": os.path.join(args.target_dir, "..", "sandbox"),
             "current_file": python_file,
             "iteration_count": 0,
-            "max_iterations": 5,
+            "max_iterations": 2,
             "pylint_reports": (0, ""),
             "refactor_plan": None,
             "raw_test_output": "",
@@ -55,7 +62,7 @@ def main():
         
         try:
             # Exécuter le workflow pour ce fichier
-            result = graph.invoke(initial_state)
+            result = graph.invoke(initial_state, {"recursion_limit": 100})
             
             # Afficher les résultats
             print(f"\n✅ Analyse terminée pour {python_file}")

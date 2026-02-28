@@ -74,9 +74,9 @@ def judge_agent_node(state: SwarmState) -> dict:
             print(f"║{' '*26}❌ TESTS EN ÉCHEC{' '*27}║")
             print(f"{'╚'+'═'*78+'╝'}")
             print(f"\n📋 Analyse (extrait) :")
-            print(f"{analysis[:200]}...")
+            print(f"{analysis[:5000]}...")
             
-        input("\n[Appuyez sur Entrée pour continuer...]")
+        # input("\n[Appuyez sur Entrée pour continuer...]")
     except Exception as e:
         analysis = f"Error analyzing tests: {str(e)}"
         tests_passed = False

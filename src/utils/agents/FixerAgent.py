@@ -63,7 +63,7 @@ Retourne UNIQUEMENT le code Python corrigé, sans explications."""
         print(f"\n✅ Code refactorisé généré")
         print(f"📊 Taille : {len(refactored_code)} caractères")
         
-        input("\n[Appuyez sur Entrée pour écrire le code refactorisé...]")
+        # input("\n[Appuyez sur Entrée pour écrire le code refactorisé...]")
     except Exception as e:
         refactored_code = f"Error generating refactored code: {str(e)}"
         status = "FAILURE"

@@ -14,5 +14,5 @@ def decide_next_action(state: SwarmState) -> str:
             return "finish"
         else:
             print(f"\n🔄 Nouvelle tentative... (Itération {iteration + 1}/{max_iter})")
-            input("\n[Appuyez sur Entrée pour continuer...]\n")
+            # input("\n[Appuyez sur Entrée pour continuer...]\n")
             return "retry"
