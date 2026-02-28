@@ -28,6 +28,9 @@ def test_generator_agent_node(state: SwarmState) -> dict:
     existing_tests_content = ""
     is_append_mode = test_file.exists() and test_file.stat().st_size > 0
 
+    # Calculer le module_name comme chemin relatif avec des points (ex: services.validators)
+    module_name = current_file.relative_to(target_dir).with_suffix('').as_posix().replace('/', '.')
+
     if is_append_mode:
         try:
             existing_tests_content = test_file.read_text(encoding="utf-8")
@@ -41,14 +44,14 @@ def test_generator_agent_node(state: SwarmState) -> dict:
             code=refactored_code if refactored_code else "# No code provided",
             functions_without_tests=", ".join(functions_without_tests),
             existing_tests=existing_tests_content,
-            module_name=current_file.stem
+            module_name=module_name
         )
     else:
         user_prompt = USER_PROMPT_TEST_GENERATOR.format(
             file_name=current_file.name,
             code=refactored_code if refactored_code else "# No code provided",
             functions_without_tests=", ".join(functions_without_tests),
-            module_name=current_file.stem
+            module_name=module_name
         )
 
     messages = [

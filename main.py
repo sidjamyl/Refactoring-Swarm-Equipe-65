@@ -17,6 +17,34 @@ def main():
         sys.exit(1)
 
     print(f"🚀 DEMARRAGE SUR : {args.target_dir}")
+
+    # Déplacer les fichiers test_*.py éparpillés vers tests/
+    target_path = Path(args.target_dir)
+    tests_dir = target_path / "tests"
+    scattered_tests = [
+        f for f in target_path.rglob("test_*.py")
+        if f.parent != tests_dir
+    ]
+    if scattered_tests:
+        tests_dir.mkdir(parents=True, exist_ok=True)
+        # Créer __init__.py et conftest.py si absents
+        init_file = tests_dir / "__init__.py"
+        if not init_file.exists():
+            init_file.write_text("", encoding="utf-8")
+        conftest_file = tests_dir / "conftest.py"
+        if not conftest_file.exists():
+            conftest_file.write_text(
+                'import sys, os\nsys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))\n',
+                encoding="utf-8"
+            )
+        for test_f in scattered_tests:
+            dest = tests_dir / test_f.name
+            if dest.exists():
+                print(f"⚠️  {test_f.name} existe déjà dans tests/, fusion ignorée")
+            else:
+                test_f.rename(dest)
+                print(f"📦 {test_f.relative_to(target_path)} → tests/{test_f.name}")
+        print(f"✅ {len(scattered_tests)} fichier(s) de test déplacé(s) dans tests/")
     
     # Récupérer uniquement les fichiers source .py (exclure tests/, __init__.py, test_*)
     all_py_files = list(Path(args.target_dir).rglob("*.py"))
